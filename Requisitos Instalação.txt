@@ -1,0 +1,11 @@
+- NodeJs e NPM
+- Python 2
+- JDK 8
+- React Native CLI
+- Android Studio
+
+Software de automação
+Chocolatey
+- NodeJs e NPM
+- Python 2
+- JDK 8
