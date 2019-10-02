@@ -1,23 +1,22 @@
 import React, {Component} from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Button } from 'react-native';
 export default class App extends Component{
 
   constructor(props){
     super(props);
     this.state = {
-      nome: ''
+      texto: '',
+      textoInput: ''
     };
-    this.pegaNome = this.pegaNome.bind(this)
+    this.enviar = this.enviar.bind(this);
+
   }
 
-  pegaNome(texto){
+  enviar(){
     let state = this.state;
+    state.texto = 'Bem-vindo ' + state.textoInput;
+    alert(state.texto)
 
-    if(texto.length > 0){
-      state.nome = 'Bem vindo ' + texto;
-    }else{
-      state.nome = '';
-    }
     this.setState(state);
   }
 
@@ -25,9 +24,14 @@ export default class App extends Component{
   render() {
     return (
       <View style={styles.container}>
-        <TextInput style={styles.input} placeholder="Nome?" 
-        underlineColorAndroid="transparent" onChangeText={this.pegaNome}/>
-        <Text style={styles.text}>{this.state.nome}</Text>
+        <TextInput style={styles.input} 
+                    placeholder="Digite seu nome..." 
+                    underlineColorAndroid="transparent" 
+                    onChangeText={(textoInput=> this.setState({textoInput}))}/>
+
+        <Button title="Aperte" onPress={this.enviar}/>  
+        
+        <Text style={styles.text}>{this.state.texto}</Text>   
       </View>
     );
   }
@@ -46,7 +50,9 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 17,
-    color: '#000000'
+    fontSize: 23,
+    color: '#000000',
+    marginTop: 15
+
   }
 });
