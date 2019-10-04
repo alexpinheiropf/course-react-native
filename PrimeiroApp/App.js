@@ -1,83 +1,72 @@
 import React, {Component} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 
-class Botao extends Component{
+export default class App extends Component{
+
   constructor(props){
     super(props);
-    this.state ={};
+    this.state = {
+      numero: 0,
+      botao: 'VAI'
+    };
+    // variável do timer do relógio
+    this.timer = null;
 
-    this.styles = StyleSheet.create({
-      botao: {
-        width: 230,
-        height: 50,
-        borderWidth: 2,
-        borderColor: props.cor,
-        borderRadius: 25
-      },
-      btnArea: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-      },
-      btnTexto: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: props.cor
-      }
-    });
+    this.vai = this.vai.bind(this);
+    this.limpar = this.limpar.bind(this);
   }
-  render(){
-    return(
-      <TouchableOpacity style={this.styles.botao} onPress={this.props.eventoBotao}>
-        <View style={this.styles.btnArea}>
-          <Text style={this.styles.btnTexto}>{this.props.nome}</Text>
-        </View>
-      </TouchableOpacity>
-    )
-  }
-}
 
-export default class App extends Component{
-constructor (props){
-  super(props);
-  this.state = {
-    textoFrase: ''
-  };
-
-  this.quebrarBiscoito = this.quebrarBiscoito.bind(this);
-
-  this.frases = ['Siga os bons e aprenda com eles.', 'O bom-senso vale mais do que muito conhecimento.', 
-  'O riso é a menor distância entre duas pessoas.', 
-  'Deixe de lado as preocupações e seja feliz.',
-  'Realize o óbvio, pense no improvável e conquiste o impossível.',
-  'Acredite em milagres, mas não dependa deles.',
-  'A maior barreira para o sucesso é o medo do fracasso.'];
-}
-
-  quebrarBiscoito(){
+  vai(){
     let state = this.state;
 
-    let numeroAleatorio = Math.floor(Math.random() * this.frases.length);
+    if(this.timer !== null){
+      // Aqui vai parar o timer
+      clearInterval(this.timer);
 
-    // Recebendo o numero da frase proporcional a posição no array
-    state.textoFrase =' " ' + this.frases[numeroAleatorio] + ' "';
+      this.timer = null;
+      state.botao = 'VAI'
+    }else {
+      // Começa a girar o timer
+      this.timer = setInterval(() => {
+        let state = this.state;
+        state.numero += 0.1;
+        this.setState(state);
+      }, 100);
+      state.botao = 'PARAR'
+    }
+      this.setState(state);
+  }
+  
+  limpar(){
+    if(this.timer !== null){
+      // Aqui vai parar o timer
+      clearInterval(this.timer);
 
-    this.setState(state)
+      this.timer = null;
+    }
+
+    let state = this.state;
+    state.numero = 0;
+
+    state.botao = 'VAI'
+    this.setState(state);
+
   }
 
   render() {
     return (
       <View style={styles.container}>
+          <Image source={require('./src/cronometro.png')}/>
+          <Text style={styles.timer}>{this.state.numero.toFixed(1)}</Text>
 
-        <Image source={require('./src/biscoito.png')} style={styles.img}/>
-
-        <Text style={styles.textoFrase}>{this.state.textoFrase}</Text>
-        
-       <Botao cor="#dd7b22" nome="Abrir Biscoito" eventoBotao={this.quebrarBiscoito}/>
-
-       {/* <Botao cor="#000000" nome="Sair do App"/> */}
-          
+          <View style={styles.btnArea}>
+            <TouchableOpacity style={styles.botao} onPress={this.vai}>
+              <Text style={styles.btnTexto}>{this.state.botao}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botao} onPress={this.limpar}>
+              <Text style={styles.btnTexto}>Limpar</Text>
+            </TouchableOpacity>
+          </View>
       </View>
     );
   }
@@ -88,17 +77,31 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#00aeef'
+  }, timer: {
+    marginTop: -160,
+    color: '#FFFFFF',
+    fontSize: 72,
+    fontWeight: 'bold'
   },
-  img: {
-    width: 250,
-    height: 250
+  btnArea: {
+    flexDirection: 'row',
+    marginTop: 70,
+    height:40
   },
-  textoFrase: {
+  botao: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    height: 40,
+    margin: 17,
+    borderRadius: 9
+  },
+  btnTexto: {
     fontSize: 20,
-    color: '#dd7b22',
-    margin: 30,
-    textAlign: 'center',
-    fontStyle: 'italic'
+    fontWeight: 'bold',
+    color: '#00aeef'
   }
 });
